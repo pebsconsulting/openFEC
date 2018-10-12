@@ -9,9 +9,9 @@ SET search_path = public, pg_catalog;
 
 DROP VIEW public.ofec_report_pac_party_all_vw;
 
-DROP MATERIALIZED VIEW public.ofec_report_pac_party_all_mv;
+DROP MATERIALIZED VIEW IF EXISTS public.ofec_report_pac_party_all_mv_tmp;
 
-CREATE MATERIALIZED VIEW public.ofec_report_pac_party_all_mv
+CREATE MATERIALIZED VIEW public.ofec_report_pac_party_all_mv_tmp
 TABLESPACE pg_default
 AS
  WITH f3_by_non_house_senate AS (
@@ -407,80 +407,112 @@ AS
      LEFT JOIN ofec_filings_amendments_all_vw amendments ON rpt.file_number = amendments.file_num
 WITH DATA;
 
-ALTER TABLE public.ofec_report_pac_party_all_mv OWNER TO fec;
-GRANT SELECT ON TABLE public.ofec_report_pac_party_all_mv TO fec_read;
+ALTER TABLE public.ofec_report_pac_party_all_mv_tmp OWNER TO fec;
+GRANT SELECT ON TABLE public.ofec_report_pac_party_all_mv_tmp TO fec_read;
 
-CREATE INDEX idx_ofec_report_pac_party_all_mv_begin_image_number_idx
-    ON public.ofec_report_pac_party_all_mv USING btree
+CREATE INDEX idx_ofec_report_pac_party_all_mv_begin_image_number_idx_tmp
+    ON public.ofec_report_pac_party_all_mv_tmp USING btree
     (beginning_image_number COLLATE pg_catalog."default", idx)
     TABLESPACE pg_default;
 
-CREATE INDEX idx_ofec_report_pac_party_all_mv_committee_id_idx
-    ON public.ofec_report_pac_party_all_mv USING btree
+CREATE INDEX idx_ofec_report_pac_party_all_mv_committee_id_idx_tmp
+    ON public.ofec_report_pac_party_all_mv_tmp USING btree
     (committee_id COLLATE pg_catalog."default", idx)
     TABLESPACE pg_default;
 
-CREATE INDEX idx_ofec_report_pac_party_all_mv_cvg_end_date_idx
-    ON public.ofec_report_pac_party_all_mv USING btree
+CREATE INDEX idx_ofec_report_pac_party_all_mv_cvg_end_dt_idx_tmp
+    ON public.ofec_report_pac_party_all_mv_tmp USING btree
     (coverage_end_date, idx)
     TABLESPACE pg_default;
     
-CREATE INDEX idx_ofec_report_pac_party_all_mv_cvg_start_date_idx
-    ON public.ofec_report_pac_party_all_mv USING btree
+CREATE INDEX idx_ofec_report_pac_party_all_mv_cvg_start_dt_idx_tmp
+    ON public.ofec_report_pac_party_all_mv_tmp USING btree
     (coverage_start_date, idx)
     TABLESPACE pg_default;
 
-CREATE INDEX idx_ofec_report_pac_party_all_mv_cycle_committee_id
-    ON public.ofec_report_pac_party_all_mv USING btree
+CREATE INDEX idx_ofec_report_pac_party_all_mv_cycle_committee_id_tmp
+    ON public.ofec_report_pac_party_all_mv_tmp USING btree
     (cycle, committee_id COLLATE pg_catalog."default")
     TABLESPACE pg_default;
 
-CREATE INDEX idx_ofec_report_pac_party_all_mv_cycle_idx
-    ON public.ofec_report_pac_party_all_mv USING btree
+CREATE INDEX idx_ofec_report_pac_party_all_mv_cycle_idx_tmp
+    ON public.ofec_report_pac_party_all_mv_tmp USING btree
     (cycle, idx)
     TABLESPACE pg_default;
 
-CREATE UNIQUE INDEX idx_ofec_report_pac_party_all_mv_idx
-    ON public.ofec_report_pac_party_all_mv USING btree
+CREATE UNIQUE INDEX idx_ofec_report_pac_party_all_mv_idx_tmp
+    ON public.ofec_report_pac_party_all_mv_tmp USING btree
     (idx)
     TABLESPACE pg_default;
 
-CREATE INDEX idx_ofec_report_pac_party_all_mv_ie_period_idx
-    ON public.ofec_report_pac_party_all_mv USING btree
+CREATE INDEX idx_ofec_report_pac_party_all_mv_ie_period_idx_tmp
+    ON public.ofec_report_pac_party_all_mv_tmp USING btree
     (independent_expenditures_period, idx)
     TABLESPACE pg_default;
 
-CREATE INDEX idx_ofec_report_pac_party_all_mv_is_amended_idx
-    ON public.ofec_report_pac_party_all_mv USING btree
+CREATE INDEX idx_ofec_report_pac_party_all_mv_is_amended_idx_tmp
+    ON public.ofec_report_pac_party_all_mv_tmp USING btree
     (is_amended, idx)
     TABLESPACE pg_default;
 
-CREATE INDEX idx_ofec_report_pac_party_all_mv_receipt_date_idx
-    ON public.ofec_report_pac_party_all_mv USING btree
+CREATE INDEX idx_ofec_report_pac_party_all_mv_receipt_date_idx_tmp
+    ON public.ofec_report_pac_party_all_mv_tmp USING btree
     (receipt_date, idx)
     TABLESPACE pg_default;
 
-CREATE INDEX idx_ofec_report_pac_party_all_mv_report_type_idx
-    ON public.ofec_report_pac_party_all_mv USING btree
+CREATE INDEX idx_ofec_report_pac_party_all_mv_report_type_idx_tmp
+    ON public.ofec_report_pac_party_all_mv_tmp USING btree
     (report_type COLLATE pg_catalog."default", idx)
     TABLESPACE pg_default;
 
-CREATE INDEX idx_ofec_report_pac_party_all_mv_report_year_idx
-    ON public.ofec_report_pac_party_all_mv USING btree
+CREATE INDEX idx_ofec_report_pac_party_all_mv_report_year_idx_tmp
+    ON public.ofec_report_pac_party_all_mv_tmp USING btree
     (report_year, idx)
     TABLESPACE pg_default;
 
-CREATE INDEX idx_ofec_report_pac_party_all_mv_total_disb_period_idx
-    ON public.ofec_report_pac_party_all_mv USING btree
+CREATE INDEX idx_ofec_report_pac_party_all_mv_total_disb_period_idx_tmp
+    ON public.ofec_report_pac_party_all_mv_tmp USING btree
     (total_disbursements_period, idx)
     TABLESPACE pg_default;
 
-CREATE INDEX idx_ofec_report_pac_party_all_mv_total_receipts_period_idx
-    ON public.ofec_report_pac_party_all_mv USING btree
+CREATE INDEX idx_ofec_report_pac_party_all_mv_total_receipts_period_idx_tmp
+    ON public.ofec_report_pac_party_all_mv_tmp USING btree
     (total_receipts_period, idx)
     TABLESPACE pg_default;
 
+DROP MATERIALIZED VIEW IF EXISTS public.ofec_report_pac_party_all_mv;
+
+ALTER MATERIALIZED VIEW IF EXISTS public.ofec_report_pac_party_all_mv_tmp RENAME TO ofec_report_pac_party_all_mv;
+
+ALTER INDEX idx_ofec_report_pac_party_all_mv_begin_image_number_idx_tmp RENAME TO idx_ofec_report_pac_party_all_mv_begin_image_number_idx;
+
+ALTER INDEX idx_ofec_report_pac_party_all_mv_committee_id_idx_tmp RENAME TO idx_ofec_report_pac_party_all_mv_committee_id_idx;    
+
+ALTER INDEX idx_ofec_report_pac_party_all_mv_cvg_end_dt_idx_tmp RENAME TO idx_ofec_report_pac_party_all_mv_cvg_end_dt_idx;
+    
+ALTER INDEX idx_ofec_report_pac_party_all_mv_cvg_start_dt_idx_tmp RENAME TO idx_ofec_report_pac_party_all_mv_cvg_start_dt_idx;
+    
+ALTER INDEX idx_ofec_report_pac_party_all_mv_cycle_committee_id_tmp RENAME TO idx_ofec_report_pac_party_all_mv_cycle_committee_id;
+    
+ALTER INDEX idx_ofec_report_pac_party_all_mv_cycle_idx_tmp RENAME TO idx_ofec_report_pac_party_all_mv_cycle_idx;
+    
+ALTER INDEX idx_ofec_report_pac_party_all_mv_idx_tmp RENAME TO idx_ofec_report_pac_party_all_mv_idx;
+    
+ALTER INDEX idx_ofec_report_pac_party_all_mv_ie_period_idx_tmp RENAME TO idx_ofec_report_pac_party_all_mv_ie_period_idx;
+    
+ALTER INDEX idx_ofec_report_pac_party_all_mv_is_amended_idx_tmp RENAME TO idx_ofec_report_pac_party_all_mv_is_amended_idx;
+    
+ALTER INDEX idx_ofec_report_pac_party_all_mv_receipt_date_idx_tmp RENAME TO idx_ofec_report_pac_party_all_mv_receipt_date_idx;
+    
+ALTER INDEX idx_ofec_report_pac_party_all_mv_report_type_idx_tmp RENAME TO idx_ofec_report_pac_party_all_mv_report_type_idx;
+    
+ALTER INDEX idx_ofec_report_pac_party_all_mv_report_year_idx_tmp RENAME TO idx_ofec_report_pac_party_all_mv_report_year_idx;
+    
+ALTER INDEX idx_ofec_report_pac_party_all_mv_total_disb_period_idx_tmp RENAME TO idx_ofec_report_pac_party_all_mv_total_disb_period_idx;
+    
+ALTER INDEX idx_ofec_report_pac_party_all_mv_total_receipts_period_idx_tmp RENAME TO idx_ofec_report_pac_party_all_mv_total_receipts_period_idx;
 
 CREATE OR REPLACE VIEW ofec_report_pac_party_all_vw AS SELECT * FROM ofec_report_pac_party_all_mv;
+
 ALTER VIEW ofec_report_pac_party_all_vw OWNER TO fec;
 GRANT SELECT ON ofec_report_pac_party_all_vw TO fec_read;
