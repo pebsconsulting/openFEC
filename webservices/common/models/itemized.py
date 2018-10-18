@@ -549,6 +549,8 @@ class ScheduleE(PdfMixin, BaseItemized):
     category_code = db.Column('catg_cd', db.String)
     category_code_full = db.Column('catg_cd_desc', db.String)
     support_oppose_indicator = db.Column('s_o_ind', db.String)
+    previous_file_number = db.Column('prev_file_num', db.Integer)
+    amendment_indicator = db.Column('amndt_ind', db.String)
 
     memo_code = db.Column('memo_cd', db.String)
     memo_code_full = db.Column('memo_cd_desc', db.String)
